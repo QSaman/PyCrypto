@@ -92,7 +92,7 @@ def main():
     parser.add_argument("-b", "--buy", action="store_true", help="The side of order is buy. By default it's --buy")
     parser.add_argument("-q", "--quote-asset", dest="quote_asset", help="The quote asset. If base-asset is IRR or IRT, by default it's BTC; otherwise it's IRT")
     parser.add_argument("-f", "--trading-fee", dest="trading_fee", default=Decimal(0.35), type=Decimal, help="Trading fees in percentage. By default it's 0.35")
-    parser.add_argument("-n", "--network-fee", dest="network_fee", default=Decimal(0), type=Decimal, help="Network fee")
+    parser.add_argument("-n", "--network-fee", dest="network_fee", default=Decimal(0), type=Decimal, help="Network fee. By default it's 0")
     parser.add_argument("amount", nargs='?', default=None, type=Decimal, help="The amount of crypto currency")
     parser.add_argument("base_asset", nargs='?', default=None, help="The base asset.")
     
