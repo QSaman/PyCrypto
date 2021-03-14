@@ -84,7 +84,7 @@ def show_result(amount, base_asset):
         price = price / Decimal(10)
         quote_asset = "irt"
     
-    print(amount * price * (Decimal(1) - args.trading_fee / Decimal(100)), quote_asset)
+    print(amount * price * (Decimal(1) - args.trading_fee / Decimal(100)) - args.network_fee, quote_asset)
     
 def main():
     parser = argparse.ArgumentParser()
@@ -92,6 +92,7 @@ def main():
     parser.add_argument("-b", "--buy", action="store_true", help="The side of order is buy. By default it's --buy")
     parser.add_argument("-q", "--quote-asset", dest="quote_asset", help="The quote asset. If base-asset is IRR or IRT, by default it's BTC; otherwise it's IRT")
     parser.add_argument("-f", "--trading-fee", dest="trading_fee", default=Decimal(0.35), type=Decimal, help="Trading fees in percentage. By default it's 0.35")
+    parser.add_argument("-n", "--network-fee", dest="network_fee", default=Decimal(0), type=Decimal, help="Network fee")
     parser.add_argument("amount", nargs='?', default=None, type=Decimal, help="The amount of crypto currency")
     parser.add_argument("base_asset", nargs='?', default=None, help="The base asset.")
     
