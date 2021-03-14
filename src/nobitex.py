@@ -91,16 +91,16 @@ def show_result(amount, base_asset):
         return price
         
     result = normalize_irr_or_irt(result)
-    print(result, quote_asset)
+    print(result, quote_asset.upper())
     if args.verbose > 0:
         trading_fee = normalize_irr_or_irt(amount * price * args.trading_fee / Decimal(100))
         if quote_asset != 'irr' and quote_asset != 'irt':
             in_irt = normalize_irr_or_irt(trading_fee * nobitex.find_price(quote_asset, 'irr', False) / Decimal(10), 'irt')
-            print("Trading fee: ", trading_fee, quote_asset, "(", in_irt, "irt)")
+            print("Trading fee: ", trading_fee, quote_asset.upper(), "(", in_irt, "IRT)")
             in_irt = normalize_irr_or_irt(args.network_fee * nobitex.find_price(quote_asset, 'irr', False) / Decimal(10), 'irt')
-            print("Network fee: ", normalize_irr_or_irt(args.network_fee), " (", in_irt, "irt)")
+            print("Network fee: ", normalize_irr_or_irt(args.network_fee), quote_asset.upper(), " (", in_irt, "IRT)")
         else:
-            print("Trading fee: ", trading_fee, quote_asset)
+            print("Trading fee: ", trading_fee, quote_asset.upper())
             print("Network fee: ", normalize_irr_or_irt(args.network_fee))
         
     

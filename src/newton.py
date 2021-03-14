@@ -88,7 +88,7 @@ def show_result(amount, base_asset):
     if quote_asset is None:
         quote_asset = 'btc' if base_asset == 'cad' else 'cad'
     price = newton.find_price(base_asset, quote_asset, not args.sell)
-    print(amount * price, quote_asset)
+    print(amount * price, quote_asset.upper())
     
 def main():
     parser = argparse.ArgumentParser()
