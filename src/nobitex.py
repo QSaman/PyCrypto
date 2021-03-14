@@ -83,8 +83,26 @@ def show_result(amount, base_asset):
     if convert_quote_to_tomans:
         price = price / Decimal(10)
         quote_asset = "irt"
+    result = amount * price * (Decimal(1) - args.trading_fee / Decimal(100)) - args.network_fee
     
-    print(amount * price * (Decimal(1) - args.trading_fee / Decimal(100)) - args.network_fee, quote_asset)
+    def normalize_irr_or_irt(price, asset=quote_asset):
+        if asset == "irr" or asset == "irt":
+            return price.quantize(Decimal('1'))
+        return price
+        
+        result = normalize_irr_or_irt(result)
+    print(result, quote_asset)
+    if args.verbose > 0:
+        trading_fee = normalize_irr_or_irt(amount * price * args.trading_fee / Decimal(100))
+        if quote_asset != 'irr' and quote_asset != 'irt':
+            in_irt = normalize_irr_or_irt(trading_fee * nobitex.find_price(quote_asset, 'irr', False) / Decimal(10), 'irt')
+            print("Trading fee: ", trading_fee, quote_asset, "(", in_irt, "irt)")
+            in_irt = normalize_irr_or_irt(args.network_fee * nobitex.find_price(quote_asset, 'irr', False) / Decimal(10), 'irt')
+            print("Network fee: ", normalize_irr_or_irt(args.network_fee), " (", in_irt, "irt)")
+        else:
+            print("Trading fee: ", trading_fee, quote_asset)
+            print("Network fee: ", normalize_irr_or_irt(args.network_fee))
+        
     
 def main():
     parser = argparse.ArgumentParser()
@@ -93,6 +111,7 @@ def main():
     parser.add_argument("-q", "--quote-asset", dest="quote_asset", help="The quote asset. If base-asset is IRR or IRT, by default it's BTC; otherwise it's IRT")
     parser.add_argument("-f", "--trading-fee", dest="trading_fee", default=Decimal(0.35), type=Decimal, help="Trading fees in percentage. By default it's 0.35")
     parser.add_argument("-n", "--network-fee", dest="network_fee", default=Decimal(0), type=Decimal, help="Network fee. By default it's 0")
+    parser.add_argument("-v", "--verbose", action="count", default=0)
     parser.add_argument("amount", nargs='?', default=None, type=Decimal, help="The amount of crypto currency")
     parser.add_argument("base_asset", nargs='?', default=None, help="The base asset.")
     
