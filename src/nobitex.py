@@ -90,7 +90,7 @@ def show_result(amount, base_asset):
             return price.quantize(Decimal('1'))
         return price
         
-        result = normalize_irr_or_irt(result)
+    result = normalize_irr_or_irt(result)
     print(result, quote_asset)
     if args.verbose > 0:
         trading_fee = normalize_irr_or_irt(amount * price * args.trading_fee / Decimal(100))
