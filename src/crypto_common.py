@@ -19,7 +19,13 @@ class RatesCache:
         if not response_http.ok:
             quit(response_http.text)
         response = response_http.json()
-        response.update({'timestamp' : self.timestamp})
+        
+        if isinstance(response, dict):
+            response.update({'timestamp' : self.timestamp})
+        elif isinstance(response, list):
+            response.append({'timestamp' : self.timestamp})
+        else:
+            raise Exception('returned Json response is unsupported: {0}'.format(response_http.text))
         
         cache_dir_path = Path(self.cache_directory)
         if not cache_dir_path.exists():
@@ -41,7 +47,13 @@ class RatesCache:
                 try:
                     with open(self.rates_filename, "r") as f:
                         json_response = json.loads(f.read())
-                        self.timestamp = json_response['timestamp']
+                        if isinstance(json_response, dict):
+                            self.timestamp = json_response['timestamp']
+                        elif isinstance(json_response, list):
+                            for item in json_response:
+                                if 'timestamp' in item:
+                                    self.timestamp = item['timestamp']
+                                    break
                         if self.is_cache_expired():
                             self.download_rates()
                         else:
