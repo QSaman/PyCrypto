@@ -1,6 +1,7 @@
 import json
 import time
 import requests
+import decimal
 
 from pathlib import Path, PurePath
 
@@ -18,7 +19,7 @@ class RatesCache:
         response_http = requests.get(self.rates_endpoint)
         if not response_http.ok:
             quit(response_http.text)
-        response = response_http.json()
+        response = response_http.json(parse_float=str)
         
         if isinstance(response, dict):
             response.update({'timestamp' : self.timestamp})
