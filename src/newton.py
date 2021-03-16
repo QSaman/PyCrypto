@@ -1,22 +1,17 @@
 #!/bin/python
 
-import socketio
-import requests
-import json
-import time
-import tempfile
 import argparse
 import sys
 
 from urllib.parse import urljoin
 from pathlib import Path, PurePath
-from crypto_common import RatesCache
+from crypto_common import RatesCache, cache_directory_base
 from decimal import *
 
 newton_base_endpoint = 'https://api.newton.co'
 newton_rates_endpoint = urljoin(newton_base_endpoint, '/dashboard/api/rates/')
 
-cache_directory = PurePath(tempfile.gettempdir(), 'py_crypto/newton')
+cache_directory = cache_directory_base / 'newton'
 rates_filename = cache_directory / 'rates.json'
 
 cache_expiry_in_seconds = 5
@@ -88,13 +83,14 @@ def show_result(amount, base_asset):
     if quote_asset is None:
         quote_asset = 'btc' if base_asset == 'cad' else 'cad'
     price = newton.find_price(base_asset, quote_asset, not args.sell)
-    print(amount * price, quote_asset.upper())
+    print(amount * price - args.network_fee, quote_asset.upper())
     
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("-s", "--sell", action="store_true", default=False, help="The side of order is sell. By default it's --buy")
     parser.add_argument("-b", "--buy", action="store_true", help="The side of order is buy. By default it's --buy")
     parser.add_argument("-q", "--quote-asset", dest="quote_asset", help="The quote asset. If base-asset is CAD, by default it's BTC; otherwise it's CAD")
+    parser.add_argument("-n", "--network-fee", dest="network_fee", default=Decimal(0), type=Decimal, help="Network fee. By default it's 0")
     parser.add_argument("amount", nargs='?', default=None, type=Decimal, help="The amount of crypto currency")
     parser.add_argument("base_asset", nargs='?', default=None, help="The base asset.")
     

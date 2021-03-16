@@ -1,15 +1,13 @@
 #!/bin/python
 
-import tempfile
 import argparse
 import sys
 
 from urllib.parse import urljoin
-from pathlib import Path, PurePath
-from crypto_common import RatesCache
+from crypto_common import RatesCache, cache_directory_base
 from decimal import *
 
-cache_directory = PurePath(tempfile.gettempdir(), 'py_crypto/shakepay')
+cache_directory = cache_directory_base / 'shakepay'
 quote_filename = cache_directory / 'quote.json'
 
 shakepay_base_endpoint = "https://api.shakepay.com"

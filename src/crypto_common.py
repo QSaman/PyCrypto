@@ -2,8 +2,11 @@ import json
 import time
 import requests
 import decimal
+import tempfile
 
 from pathlib import Path, PurePath
+
+cache_directory_base = PurePath(tempfile.gettempdir(), 'py_crypto')
 
 class RatesCache:
     def __init__(self, rates_endpoint, cache_expiry_in_seconds, load_json_response_callback, cache_directory, rates_filename):

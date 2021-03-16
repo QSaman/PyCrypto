@@ -1,18 +1,17 @@
 #!/bin/python
 
-import tempfile
 import sys
 import argparse
 
 from urllib.parse import urljoin
 from pathlib import Path, PurePath
-from crypto_common import RatesCache
+from crypto_common import RatesCache, cache_directory_base
 from decimal import *
 
 nobitex_base_endpoint = 'https://api.nobitex.ir'
 nobitex_market_endpoint = urljoin(nobitex_base_endpoint, '/market/stats?srcCurrency=btc,eth,ltc,usdt,xrp,bch,bnb,eos,xlm,etc,trx,doge,pmn&dstCurrency=rls,usdt')
 
-cache_directory = PurePath(tempfile.gettempdir(), 'py_crypto/nobitex')
+cache_directory = cache_directory_base / 'nobitex'
 market_filename = cache_directory / 'market.json'
 
 cache_expiry_in_seconds = 5
